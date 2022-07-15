@@ -1,0 +1,50 @@
+﻿@page
+@model pWPortalLogista.Pages.Login.ResetPwdModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Login";
+    string label_Login = "E-mail";
+}
+
+<!-- /.login-logo -->
+<div class="card login-box">
+    <div class="card-body login-card-body">
+    
+        <p class="login-box-msg">Recuperação de Senha</p>
+
+        @if (!ModelState.IsValid)
+        {
+            <div class="col-md-10">
+                <small><div asp-validation-summary="All" class="text-danger"></div></small>
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+
+            <div class="input-group mb-3">
+                <input type="text" asp-for="Login" class="form-control" placeholder=@label_Login required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fa fa-user"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <a asp-page="/Login/Login" class="btn btn-warning btn-block">Voltar</a>
+                </div>
+                <div class="col-4">
+                </div>
+                <!-- /.col -->
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+    </div>
+
+    <!-- /.login-card-body -->
+</div>
+

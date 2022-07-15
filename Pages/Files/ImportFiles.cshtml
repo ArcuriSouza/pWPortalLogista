@@ -1,0 +1,145 @@
+﻿@page "{id?}"
+@model pWPortalLogista.Pages.Files.ImportFilesModel
+@using System.Globalization;
+@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Message.Modal.Title"] = "Mensagem";
+}
+<input asp-for="OutputMessage" id="OutputMessage" hidden="hidden" /> 
+<input asp-for="ValidaOutPut" id="ValidaOutPut" hidden="hidden" /> 
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h4><i class="fas fa-cloud-upload-alt mr-1"></i> Importação de Arquivos para Lojistas</h4>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form id="formPost" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+
+                    @if (!ModelState.IsValid)
+                    {
+                        <div class="col-md-10">
+                            <h3 class="text-danger">Erros de validação</h3>
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
+                    }
+                    <!-- general form elements -->
+                    <div class="card card-secondary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Processamento</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <div class="card-body table-responsive">
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <input asp-for="Upload" type="file" multiple />
+                                    </div>
+                                </div>
+                            </div>                           
+
+                        </div>
+                            @* } *@
+                        <div class="card-footer">
+                            <button class="btn btn-success mr-1" type="submit">
+                                <i class="fas fa-cloud-upload-al mr-1"></i>Carregar arquivo
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+        
+    </form>
+
+    
+</section>
+
+<!-- Output Messages Modal -->
+@if (HttpContext.Session.GetString("OutputMessage") != null)
+{
+    <div class="modal" id="messageModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="far fa-comments text-primary"></i> @ViewData["Message.Modal.Title"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>Mensagem: </strong> @HttpContext.Session.GetString("OutputMessage")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-exclamation-circle"></i> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<!-- /.content -->
+<script>
+    $(function () {
+        $("#menu_Sys_ImportDoc").addClass("active")
+
+        $('.resultTable').DataTable({
+            "searching" : true                
+        });
+
+        $(".checkbox-toggle-all").click(function () {
+            $("input:checkbox.checkbox-all").prop('checked', $(this).prop("checked"));
+        });
+
+        var valueOutput = $("#OutputMessage").val();
+        var validaOutPut = $("#ValidaOutPut").val();
+        
+        if(valueOutput != ""){
+            if(validaOutPut == "SUCCESS"){
+                iconOutput = "success"
+            }else{
+                iconOutput = "error"
+            }   
+
+            var Toast = Swal.mixin({
+                customClass : {
+                  title: 'swal2-title-content'
+                },
+                toast: true,
+                position: 'left-bottom',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            Toast.fire({
+                icon: iconOutput,
+                title: valueOutput
+            })
+
+            $(".swal2-title-content").css("color","#595959");
+        }
+    });
+</script>
+}

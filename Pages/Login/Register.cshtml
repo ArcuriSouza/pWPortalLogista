@@ -1,0 +1,106 @@
+﻿@page
+@model pWPortalLogista.Pages.Register.RegisterModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Login";
+    ViewData["Window.Title"] = "Primeiro Acesso - Josapar";
+    ViewData["Form.Info"] = "Restrito à Funcionários";
+    ViewData["Button.Submit"] = "Validar";
+    ViewData["Button.Back"] = "Voltar";
+}
+
+<!-- /.login-logo -->
+<div class="card login-box">
+    <div class="card-body login-card-body">
+    
+        <p class="login-box-msg">@ViewData["Form.Info"]</p>
+
+        @if (!ModelState.IsValid)
+        {
+            <div class="col-md-10">
+                <small><div asp-validation-summary="All" class="text-danger"></div></small>
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+            <div class="input-group mb-3">
+                <input asp-for="txLuc" type="text" class="form-control" placeholder="LUC" class="auto-complete-off" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-id-card-alt"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txLogin" type="text" class="form-control" placeholder="Login" class="auto-complete-off" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-id-card-alt"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txCNPJCPF" type="text" class="form-control" placeholder="CNPJ/CPF" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fa fa-user"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txFantasia" type="text" class="form-control" placeholder="Nome Fantasia" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-calendar"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txQualif" type="text" class="form-control" placeholder="Qualificação" data-inputmask='"mask": "999.999.999/99"' data-mask required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-address-card"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txContrato" type="text" class="form-control" placeholder="Contrato" class="auto-complete-off" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-female">
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txNopessoa" type="text" class="form-control" placeholder="Nome Pessoa" class="auto-complete-off" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-female">
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="txEmail" type="email" class="form-control" placeholder="E-mail" class="auto-complete-off" autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <a asp-page="./Login" class="btn btn-warning btn-block">@ViewData["Button.Back"]</a>
+                </div>
+                <div class="col-4">
+                </div>
+                <!-- /.col -->
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block">@ViewData["Button.Submit"]</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+    </div>
+
+    <!-- /.login-card-body -->
+</div>

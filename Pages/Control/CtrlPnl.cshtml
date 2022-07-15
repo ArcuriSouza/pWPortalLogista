@@ -1,0 +1,222 @@
+﻿@page
+@using System.Globalization
+@model pWPortalLogista.Pages.Control.CtrlPnlModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12 d-flex flex-row justify-content-between">
+            <h4><i class="fas fa-lock mr-2"></i>Controle de Acessos</h4>
+            <div class="input-group input-group-sm" style="width: auto;">
+                <a asp-page="UsrEdit" type="button" class="btn btn-default btn-sm btn-secondary d-flex align-items-center" data-toggle="tooltip" data-container="body" title="Nova Mensagem"><i class="fas fa-plus mr-2 d-flex align-items-center"></i>Novo Acesso</a>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+
+            <div class="col-12">
+                <div class="card card-secondary card-outline">
+
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-search mr-2"></i>Pesquisa de Lojistas</h3>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+                        <form id="formPost" method="post" autocomplete="off"   >
+
+                            <div class="row">
+                                <div class="form-group row col-12">
+                                    <div class="form-group row col-12">
+                                        <label for="LucFilter" class="col-3 col-sm-3 col-md-2 col-lg-1 col-form-label mt-2">LUC</label>
+                                        <div class="col-9 col-sm-9 col-md-6 col-lg-4">
+                                            <input asp-for="LucFilter" type="text" class="form-control mt-2" autofocus>
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row col-12">
+                                        <label for="EmailFilter" class="col-3 col-sm-3 col-md-2 col-lg-1 col-form-label mt-2">E-mail</label>
+                                        <div class="col-9 col-sm-9 col-md-6 col-lg-4">
+                                            <input asp-for="EmailFilter" type="text" class="form-control mt-2" autofocus>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row col-12">
+                                        <label for="NameFilter" class="col-3 col-sm-3 col-md-2 col-lg-1 col-form-label mt-2">Nome</label>
+                                        <div class="col-9 col-sm-9 col-md-6 col-lg-4">
+                                            <input asp-for="NameFilter" type="text" class="form-control mt-2" autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <div class="col-1 col-sm-2 col-md-2 col-lg-1">
+                                        <div class="form-check form-group">
+                                            <input asp-for="IsAdminFilter" type="checkbox" class="form-check-input" autofocus>
+                                            <label class="form-check-label"><strong>Admin?</strong></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-2 col-md-2 col-lg-1">
+                                        <div class="form-check form-group">
+                                            <input asp-for="IsActiveFilter" type="checkbox" class="form-check-input" autofocus>
+                                            <label class="form-check-label"><strong>Ativo?</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- SEARCH BUTTON -->
+                                <div class="col-12 col-sm-12 col-md-2 col-lg-3">
+                                    <button class="align-self-end btn btn-primary" type="submit">
+                                        <i class="fa fa-search mr-1"></i>Pesquisar
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    
+                </div>
+            
+          </div>
+          
+        </div>
+    </section>
+    <!-- /.content -->
+
+    @if(Model.lstUser != null)
+    {
+        if(Model.lstUser.Count() > 0)
+        {
+
+            <!-- Search Result Card -->
+            <section class="content">
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="card card-success card-outline">
+
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-list-ol mr-2"></i>Listagem</h3>
+                                </div>
+
+                                <!-- /.card-header -->
+                                <div class="card-body">
+
+                                    <div class="row">
+
+                                        <div class="card-body table-responsive p-0">
+                                            <table class="table table-striped table-hover table-bordered table-sm dataTable" id="resultTable">
+                                                <thead>
+                                                    <tr class="bg-gray">
+                                                        <th class="text-center">Código</th>
+                                                        <th class="text-center">Nome</th>
+                                                        <th class="text-center">Nome Fantasia</th>
+                                                        <th class="text-center">Tipo de Usuário</th>
+                                                        <th class="text-center">Ativo no Portal?</th>
+                                                        <th class="text-center">Último Acesso</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.lstUser)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-center text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@item.Iduser</a></td>
+                                                            <td class="text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@item.Txnopessoa</a></td>
+                                                            <td class="text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@item.Txfantasia</a></td>
+                                                            <td class="text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@item.Txemail</a></td>
+                                                            <td class="text-center text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@(item.Iduser == null ? "" : (item.Isadmin == true ? "Administrador" : "Normal"))</a></td>
+                                                            @if(item.Dtlastaccess == null)
+                                                            {
+                                                                <td></td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center text-dark"><a asp-page="./UsrEdit" asp-route-id=@item.Iduser>@DateTime.Parse(item.Dtlastaccess.ToString()).ToString("dd/MM/yyyy HH:mm:ss")</a></td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="bg-gray">
+                                                        <th colspan="1" class="text-right">Total:</th>
+                                                        <th colspan="5" class="ml-2">@String.Format(new CultureInfo("pt-BR"), "{0}", Model.lstUser.Count())</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+
+                </div>
+            </section>
+
+        }
+
+    }
+
+<!-- Output Messages Modal -->
+@if (Model.OutputMessage.Length > 0)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="far fa-comments text-primary"></i> @ViewData["Message.Modal.Title"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>Mensagem: </strong> @Model.OutputMessage
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-exclamation-circle"></i> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+    $('#resultTable').DataTable({
+        "searching" : true,
+        "pageLength": 25,
+        "paging": true                
+    });
+    $(function () {
+        $("#menu_Sys_Control").addClass("active")
+        
+        
+    });
+    if ($('#messageModal').length > 0) {
+        //console.log('Show Modal');
+        $("#messageModal").modal();
+    }
+   
+</script>
+}
+

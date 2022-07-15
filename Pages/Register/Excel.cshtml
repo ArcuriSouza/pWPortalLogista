@@ -1,0 +1,123 @@
+﻿@page
+@model pWPortalLogista.Pages.Excel.ExcelModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h4><i class="fas fa-table mr-1"></i> Cadastro de Lojistas por Planilha</h4>
+        <span class="text-danger">OBS: Só será cadastrado caso o campo de e-mail e LUC esteja preenchido</span>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form id="formPost" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+
+                    @if (!ModelState.IsValid)
+                    {
+                        <div class="col-md-10">
+                            <h3 class="text-danger">Erros de validação</h3>
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
+                    }
+                    <!-- general form elements -->
+                    <div class="card card-secondary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Processamento</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <div class="card-body table-responsive">
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <input asp-for="Upload" type="file" accept=".xlsx,.xls" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- checkbox -->
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input asp-for="typePlan" value="1" id="radioReal" class="form-check-input" type="radio" checked>
+                                            <label class="form-check-label">Planilha Real</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input asp-for="typePlan" value="2" id="radioMonet" class="form-check-input" type="radio">
+                                            <label class="form-check-label">Planilha Monet</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button class="btn btn-success mr-1" type="submit">
+                                <i class="fas fa-cloud-upload-al mr-1"></i>Carregar arquivo
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </form>
+</section>
+<!-- /.content -->
+
+<!-- Output Messages Modal -->
+@if (Model.OutputMessage.Length > 0)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="far fa-comments text-primary mr-1"></i>Mensagem do sistema</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>Mensagem: </strong> @Model.OutputMessage
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-exclamation-circle"></i> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+    $(function () {
+        $("#menu_Sys_Excel").addClass("active")
+    });
+
+    if ($('#messageModal').length > 0) {
+        //console.log('Show Modal');
+        $("#messageModal").modal();
+    }
+
+</script>
+}

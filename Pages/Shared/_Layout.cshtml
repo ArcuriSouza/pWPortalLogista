@@ -1,0 +1,295 @@
+@using System.Security.Claims;
+@using System.Globalization;
+@using pWPortalLogista;
+@using pWPortalLogista.Models;
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="title" content="Real Empreendimentos | Portal do Lojista">
+  <meta name="description" content="Portal do Lojista da Real Empreendimentos">
+  <meta name="robots" content="index">
+  <meta name="keywords" content="lojista,real,portal,empreendimentos,imobiliaria,real empreendimentos, portal do lojista">
+
+  <link rel="icon" type="image/png" href="~/img/real-logo-icon.png" />
+  <title>Real Empreendimentos | Portal do Logista</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <!-- Bootstrap4 Duallistbox -->
+  <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.css">
+</head>
+<body class="light-mode hold-transition sidebar-mini h-100" style="background-color: #ddd" onload="window.history.replaceState(null, null, window.location.href);"><!-- (onload) To Prevent Form Error -->
+  @if (User.Claims.Count() > 0)
+  {
+    <input id="UserId" type="number" value='@User.Claims.FirstOrDefault(f => f.Type == "Id").Value' hidden readonly>
+  }
+
+  @if(@Global.idLucs == null){
+    Global.idLucs = new List<Luc>();
+  }
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-light" style="background-color: #eee">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+      </ul>
+
+      <!-- Right navbar links -->
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          @if(@Global.idLucs.Count() > 0 && Global.idLucs != null){
+            <select id="lucUserLayout" class="form-control bg-transparent border-0 nav-link" style="width: 100%; text-align-last: right;" tabindex="-1" aria-hidden="true" autofocus>
+                @foreach (var item in @Global.idLucs)
+                {
+                    if(item.Idluc == @Global.idLucHome){
+                      <option value=@item.Idluc selected>@item.Txluc</option>
+                    }else{
+                      <option value=@item.Idluc>@item.Txluc</option>
+                    }
+                }   
+            </select>
+          }
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link " data-toggle="dropdown" href="#">
+            <i class="fas fa-user mr-2"></i> @ti.ToTitleCase(User.Claims.FirstOrDefault(f => f.Type == "Name").Value.ToLower().Split(" ")[0])
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-item dropdown-header">Seu último acesso:</span>
+            <div class="dropdown-divider"></div>
+            <span class="dropdown-item">
+              <center>
+                <i class="fas fa-user-clock mr-1"></i>
+                <span class="text-muted text-sm">@User.Claims.FirstOrDefault(f => f.Type == "DtLastAccess").Value</span>
+                <br />
+              </center>
+            </span>
+          </div>
+        </li>
+        
+        <li class="nav-item">
+          <a asp-page="/Login/Logout" class="nav-link">Sair</a>
+        </li>
+        
+      </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-light-warning elevation-4" style="background-color: #eee; height: 100vh">
+      <!-- Brand Logo -->
+      <span class="brand-link d-flex justify-content-center">
+        <img src="~/img/real-logo-icon.png" alt="Josapar Logo" style="max-height:100px; max-width: 150px; width: 100%;">
+      </span>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                @if(Global.idLucs.Count() > 0){
+                  <li class="nav-item">
+                      <a id="menu_billet" asp-page="/Files/CheckFiles" class="nav-link">
+                          <i class="nav-icon fas fa-book"></i>
+                          <p>Boletos</p>
+                      </a>
+                  </li>
+                }
+                @if (User.IsInRole("Administrator") == true)
+                {
+                  <li class="nav-item has-treeview menu-is-opening menu-open" id="group_Sys">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-cogs"></i>
+                      <p>
+                        Sistema
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/Files/AllFiles" id="menu_Sys_Billet" class="nav-link">
+                          <i class="nav-icon fas fa-folder-open text-secondary"></i>
+                          <p>Boletos</p>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/Files/ImportFiles" id="menu_Sys_ImportDoc" class="nav-link">
+                          <i class="nav-icon fas fa-cloud-upload-alt text-secondary"></i>
+                          <p>Importa Doc.</p>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/Files/SendMail" id="menu_Sys_SendMail" class="nav-link">
+                          <i class="nav-icon fas fa-envelope text-secondary"></i>
+                          <p>Envia Email Boleto</p>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/Register/Excel" id="menu_Sys_Excel" class="nav-link">
+                          <i class="nav-icon fas fa-table text-secondary"></i>
+                          <p>Cadastro p/ Plan.</p>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/LucCtrl/LucPnl" id="menu_Sys_Luc" class="nav-link">
+                          <i class="nav-icon fas fa-id-badge text-secondary"></i>
+                          <p>Cadastro de LUC</p>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a asp-page="/Control/CtrlPnl" id="menu_Sys_Control" class="nav-link">
+                          <i class="nav-icon fas fa-tasks text-secondary"></i>
+                          <p>Gestão de Acesso</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                }
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    @RenderBody()
+
+    <a id="back-to-top" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+      <i class="fas fa-chevron-up"></i>
+    </a>
+
+  </div>
+  <!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+
+<style>
+    .text-person-white > a {
+        color: #fff!important;
+    }
+    .text-person-white > a:hover {
+        color: #007bff!important;
+    }
+    .sidebar-dark-warning .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-warning .nav-sidebar>.nav-item>.nav-link.active{
+      background-color: rgba(0,0,0,.1);
+    }
+</style>
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
+<!-- Sweet Alert -->
+<script src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+<!-- ChartJS -->
+<script src="~/plugins/chart.js/Chart.min.js"></script>
+<!-- Select2 -->
+<script src="~/plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap Switch -->
+<script src="~/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<!-- DataTables -->
+<script src="~/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<script src="~/plugins/datatables-buttons/js/dataTables.buttons.js"></script>
+<script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.js"></script>
+<script src="~/plugins/datatables-buttons/js/buttons.html5.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<!-- JQuery Mask -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+<!-- Summernote -->
+<script src="~/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- InputMask -->
+<script src="~/plugins/moment/moment.min.js"></script>
+<script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Page script -->
+<script>
+  //Bootstrap Duallistbox
+  $("#back-to-top").hover(function(){
+    $("#back-to-top").css("cursor","pointer")
+  });
+  $("#back-to-top").click(function() {
+    
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+    return false;
+  });
+
+  $('.select2').select2()
+
+  //Initialize Select2 Elements
+  $('.select2bs4').select2({
+    theme: 'bootstrap4'
+  })
+
+  $("#lucUserLayout").on("change", function(){
+    $.ajax({
+        type: "POST",
+        url: "/API/SetGlobalLuc/" + $(this).val(),
+        success: function (response, status) {
+            if (response.length > 0) {
+              location.reload()
+            }            
+        },
+        failure: function (response) {
+            alert(response.d);
+        }
+    });
+  });
+
+  
+ 
+
+</script>
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>

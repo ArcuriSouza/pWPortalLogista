@@ -1,0 +1,300 @@
+﻿@page
+@model pWPortalLogista.Pages.AllFilesModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<input asp-for="OutputMessage" id="OutputMessage" hidden="hidden" /> 
+<input asp-for="ValidaOutPut" id="ValidaOutPut" hidden="hidden" /> 
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4><i class="fas fa-cloud-download-alt"></i>  &nbspBoletos</h4>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+
+            <div class="col-12 ">
+              <div class="card card-secondary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title text-secondary"><strong>Boletos:</strong></h3>
+                </div>
+                
+                @if(Model.lstFiles.Count() > 0 || Model.lstFilesToExpire.Count() > 0 || Model.lstFilesExpired.Count() > 0){
+
+                    <div class="card card-tabs m-0">
+                      <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                          <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-one-all-tab" data-toggle="pill" href="#custom-tabs-one-all" role="tab" aria-controls="custom-tabs-one-all" aria-selected="true">Todos os boletos</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-one-almostVenc-tab" data-toggle="pill" href="#custom-tabs-one-almostVenc" role="tab" aria-controls="custom-tabs-one-almostVenc" aria-selected="false">Boletos a vencer</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-one-venc-tab" data-toggle="pill" href="#custom-tabs-one-venc" role="tab" aria-controls="custom-tabs-one-venc" aria-selected="false">Boletos vencidos</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="card-body table-responsive p-1">
+                        <div class="tab-content"  id="custom-tabs-one-tabContent">
+                          <div class="tab-pane fade show active p-3" id="custom-tabs-one-all" role="tabpanel" aria-labelledby="custom-tabs-one-all-tab">
+                            <div class="d-flex mailbox-controls mb-2">
+                                <!-- Check all button -->
+                                <button type="button" class="d-flex mx-2 align-items-center btn btn-default btn-sm checkbox-toggle-all"><input type="checkbox" class="checkbox-toggle-all">
+                                </button>
+                                <div class="btn-group">
+                                <button type="button" class="btn mx-2 btn-default btnDelete btn-sm"><i class="far fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-hover table-bordered table-sm dataTable resultTable" id="resultTable">
+                                <thead>
+                                    <tr class="bg-gray">
+                                      <th class="text-center align-middle">Lido</th>
+                                      <th class="text-center align-middle">Data de Leitura</th>
+                                      <th class="text-center align-middle">Nome</th>
+                                      <th class="text-center align-middle">Faturamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{var userId = User.Claims.FirstOrDefault(x => x.Type == "Id").Value;}
+                                    @foreach(var item in Model.lstFiles)
+                                    {
+                                        <tr>
+                                          <td class="align-middle">
+                                            <div class="icheck-primary text-center">
+                                                <input type="checkbox" value=@item.Iddoc class="checkbox-all">
+                                            </div>
+                                          </td>
+                                          
+                                          @* <td class="text-center align-middle text-dark p-0">
+                                            @if(item.DocuserOpen.Count == 0){
+                                              <i class=""></i>
+                                            }else{
+                                              <i class="fas fa-check text-success"></i>  
+                                            }
+                                          </td> *@
+                                          <td class="text-center align-middle text-dark p-0">@(item.DocuserOpen.Count == 0 ? "" : item.DocuserOpen.FirstOrDefault().Dtopen.ToString())</td>                                  
+                                          <td class="text-left align-middle text-dark p-0 ml-2"><a href="~/import/@item.Nodoc" data-id="@item.Iddoc" class="itemDoc" target="_blank">@item.Nodoc</a></td>
+                                          <td class="text-center align-middle text-dark p-0">@DateTime.Parse(item.Dtfat.ToString()).ToString("dd/MM/yyyy")</td>                                    
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                          </div>
+                          <div class="tab-pane fade p-3" id="custom-tabs-one-almostVenc" role="tabpanel" aria-labelledby="custom-tabs-one-almostVenc-tab">
+                            <div class="d-flex mailbox-controls mb-2">
+                                <!-- Check all button -->
+                                <button type="button" class="d-flex mx-2 align-items-center btn btn-default btn-sm checkbox-toggle-toExpire"><input type="checkbox" class="checkbox-toggle-toExpire">
+                                </button>
+                                <div class="btn-group">
+                                <button type="button" class="btn mx-2 btn-default btnDelete btn-sm"><i class="far fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-hover table-bordered table-sm dataTable resultTable" id="resultTable">
+                              <thead>
+                                  <tr class="bg-gray">
+                                      <th class="text-center align-middle">Lido</th>
+                                      <th class="text-center align-middle">Data de Leitura</th>
+                                      <th class="text-center align-middle">Nome</th>
+                                      <th class="text-center align-middle">Faturamento</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach(var itemTE in Model.lstFilesToExpire)
+                                  {
+                                      <tr>
+                                        <td class="align-middle">
+                                          <div class="icheck-primary text-center">
+                                              <input type="checkbox" value=@itemTE.Iddoc class="checkbox-toExpire">
+                                          </div>
+                                        </td>
+                                        
+                                        @* <td class="text-center align-middle text-dark p-0">
+                                          @if(item.DocuserOpen.Count == 0){
+                                            <i class=""></i>
+                                          }else{
+                                            <i class="fas fa-check text-success"></i>  
+                                          }
+                                        </td> *@
+                                        <td class="text-center align-middle text-dark p-0">@(itemTE.DocuserOpen.Count == 0 ? "" : itemTE.DocuserOpen.FirstOrDefault().Dtopen.ToString())</td>                                  
+                                        <td class="text-left align-middle text-dark p-0 ml-2"><a href="~/import/@itemTE.Nodoc" data-id="@itemTE.Iddoc" class="itemDoc" target="_blank">@itemTE.Nodoc</a></td>
+                                        <td class="text-center align-middle text-dark p-0">@DateTime.Parse(itemTE.Dtfat.ToString()).ToString("dd/MM/yyyy")</td>                                    
+                                    </tr>
+                                  }
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class="tab-pane fade p-3" id="custom-tabs-one-venc" role="tabpanel" aria-labelledby="custom-tabs-one-venc-tab">
+                            <div class="d-flex mailbox-controls mb-2">
+                                <!-- Check all button -->
+                                <button type="button" class="d-flex mx-2 align-items-center btn btn-default btn-sm checkbox-toggle-expired"><input type="checkbox" class="checkbox-toggle-expired">
+                                </button>
+                                <div class="btn-group">
+                                <button type="button" class="btn mx-2 btn-default btnDelete btn-sm"><i class="far fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-hover table-bordered table-sm dataTable resultTable" id="resultTable">
+                              <thead>
+                                  <tr class="bg-gray">
+                                      <th class="text-center align-middle">Lido</th>
+                                      <th class="text-center align-middle">Data de Leitura</th>
+                                      <th class="text-center align-middle">Nome</th>
+                                      <th class="text-center align-middle">Faturamento</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach(var itemE in Model.lstFilesExpired)
+                                  {
+                                      <tr>
+                                        <td class="align-middle">
+                                          <div class="icheck-primary text-center">
+                                              <input type="checkbox" value=@itemE.Iddoc class="checkbox-expired">
+                                          </div>
+                                        </td>
+                                        
+                                        @* <td class="text-center align-middle text-dark p-0">
+                                          @if(item.DocuserOpen.Count == 0){
+                                            <i class=""></i>
+                                          }else{
+                                            <i class="fas fa-check text-success"></i>  
+                                          }
+                                        </td> *@
+                                        <td class="text-center align-middle text-dark p-0">@(itemE.DocuserOpen.Count == 0 ? "" : itemE.DocuserOpen.FirstOrDefault().Dtopen.ToString())</td>                                  
+                                        <td class="text-left align-middle text-dark p-0 ml-2"><a href="~/import/@itemE.Nodoc" data-id="@itemE.Iddoc" class="itemDoc" target="_blank">@itemE.Nodoc</a></td>
+                                        <td class="text-center align-middle text-dark p-0">@DateTime.Parse(itemE.Dtfat.ToString()).ToString("dd/MM/yyyy")</td>                                    
+                                    </tr>
+                                  }
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>                      
+                      </div>
+                    </div>
+                }else{
+                  <div class="card-body">
+                    <ul class="list-unstyled">
+                      <li>
+                        Sem arquivos para mostrar.    
+                      </li>
+                    </ul>
+                  </div>
+                }
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+
+            
+
+          </div>
+          
+        </div>
+    </section>
+    <!-- /.content -->
+
+@section Scripts {
+<script>
+    $(function () {
+      $("#menu_Sys_Billet").addClass("active")
+      $('.resultTable').DataTable({
+        "searching" : true                
+      });
+
+      if(sessionStorage.getItem("OutputMessage") != null){
+        var valueOutput = sessionStorage.getItem("OutputMessage");
+        var validaOutPut = "SUCCESS";
+
+        var Toast = Swal.mixin({
+            customClass : {
+              title: 'swal2-title-content'
+            },
+            toast: true,
+            position: 'left-bottom',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        Toast.fire({
+            icon: iconOutput,
+            title: valueOutput
+        })
+
+        $(".swal2-title-content").css("color","#595959");
+        sessionStorage.removeItem("OutputMessage")
+      } 
+
+        
+
+        var menu = document.getElementById("menu_Down");
+        menu.className += " active";
+    });
+    
+    @* $(".itemDoc").on("click", function(){
+      $.ajax({
+          type: "GET",
+          url: "/API/OpenDoc/" + $(this).data("id"),
+          success: function (response) {
+              console.log(response)
+              if (response.length > 0) {
+                  location.reload()
+              }
+          },
+          failure: function (response) {
+              alert(response.d);
+          }
+      });
+    }); *@
+
+    $(".btnDelete").on("click", function(){
+        var arrayInputs = ""
+        $("input:checked:not(.checkbox-toggle)").each(function(){
+            if(arrayInputs.length > 0){
+                arrayInputs = arrayInputs + ";" + $(this).val()
+            }else{
+                arrayInputs = $(this).val()
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/API/DeleteDoc/" + arrayInputs,
+            success: function (response) {
+                if (response.length > 0) {
+                  sessionStorage.setItem("OutputMessage", response);
+                  location.reload()
+                }
+                
+            },
+            failure: function (response) {
+                alert(response.d);
+            }
+        });
+    });
+
+    $(".checkbox-toggle-all").click(function () {
+        $("input:checkbox.checkbox-all").prop('checked', $(this).prop("checked"));
+    });
+    $(".checkbox-toggle-toExpire").click(function () {
+        $("input:checkbox.checkbox-toExpire").prop('checked', $(this).prop("checked"));
+    });
+    $(".checkbox-toggle-expired").click(function () {
+        $("input:checkbox.checkbox-expired").prop('checked', $(this).prop("checked"));
+    });
+    
+</script>
+}

@@ -1,0 +1,242 @@
+﻿@page "{id?}"
+@model pWPortalLogista.Pages.Files.SendMailModel
+@using System.Globalization;
+@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Message.Modal.Title"] = "Mensagem";
+}
+<input asp-for="OutputMessage" id="OutputMessage" hidden="hidden" /> 
+<input asp-for="ValidaOutPut" id="ValidaOutPut" hidden="hidden" /> 
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h4><i class="fas fa-cloud-upload-alt mr-1"></i> Envia E-mail de Boleto Cadastrado</h4>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form id="formPost" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+
+                    @if (!ModelState.IsValid)
+                    {
+                        <div class="col-md-10">
+                            <h3 class="text-danger">Erros de validação</h3>
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
+                    }
+                    <!-- general form elements -->
+                    <div class="card card-secondary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">LUC</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <div class="card-body table-responsive">
+                            <!-- Main content -->
+                            <section class="content">
+                                <div class="container-fluid">
+
+                                <div class="row">
+
+                                    <div class="col-12 ">
+                                        
+                                        @if(Model.lstLuc.Count() > 0){
+
+                                            <div class="card card-tabs m-0">
+                                            <div class="card-header p-0 pt-1">
+                                                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" id="custom-tabs-one-all-tab" data-toggle="pill" href="#custom-tabs-one-all" role="tab" aria-controls="custom-tabs-one-all" aria-selected="true">Todos os boletos</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body table-responsive p-1">
+                                                <div class="tab-content"  id="custom-tabs-one-tabContent">
+                                                    <div class="tab-pane fade show active p-3" id="custom-tabs-one-all" role="tabpanel" aria-labelledby="custom-tabs-one-all-tab">
+                                                        <div class="d-flex mailbox-controls mb-2">
+                                                            <div class="btn-group">
+                                                                @* <button type="button" class="btn mx-2 btn-default btnDelete btn-sm"><i class="far fa-envelope"></i></button> *@
+                                                            </div>
+                                                        </div>
+                                                        <table class="table table-striped table-hover table-bordered table-sm dataTable resultTable" id="resultTable">
+                                                            <thead>
+                                                                <tr class="bg-gray">
+                                                                    <th class="text-center align-middle">
+                                                                        <div class="icheck-primary text-center">
+                                                                            <input type="checkbox" class="checkbox-toggle-all">
+                                                                        </div>
+                                                                    </th>
+                                                                    <th class="text-center align-middle">LUC</th>
+                                                                    <th class="text-center align-middle">Nome Fantasia</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @{var userId = User.Claims.FirstOrDefault(x => x.Type == "Id").Value;}
+                                                                @foreach(var item in Model.lstLuc)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="align-middle">
+                                                                            <div class="icheck-primary text-center">
+                                                                                <input type="checkbox" value=@item.Idluc class="checkbox-all">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-center align-middle text-dark p-0">@item.IdlucNavigation.Txluc</td>                                  
+                                                                        <td class="text-left align-middle text-dark p-0 pl-2">@item.IdlucNavigation.Txfantasia</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                
+                                                </div>                      
+                                            </div>
+                                            </div>
+                                        }else{
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                            <li>
+                                                Sem LUC para mostrar.    
+                                            </li>
+                                            </ul>
+                                        </div>
+                                        }
+                                    </div>
+                                    <!-- /.col -->
+
+                                    
+
+                                </div>
+                                
+                                </div>
+                            </section>
+                            <!-- /.content -->
+
+                        </div>
+                            @* } *@
+                        <div class="card-footer">
+                            <button id="saveBtn" class="btn btn-primary mr-1">
+                                <i class="fas fa-cloud-upload-al mr-1"></i>Enviar e-mail
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+        
+    </form>
+
+    
+</section>
+
+<!-- Output Messages Modal -->
+@if (HttpContext.Session.GetString("OutputMessage") != null)
+{
+    <div class="modal" id="messageModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="far fa-comments text-primary"></i> @ViewData["Message.Modal.Title"]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>Mensagem: </strong> @HttpContext.Session.GetString("OutputMessage")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-exclamation-circle"></i> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<!-- /.content -->
+<script>
+    $(function () {
+        $("#menu_Sys_SendMail").addClass("active")
+
+        $('.resultTable').DataTable({
+            "searching" : true,
+            "bSort" : false           
+        });
+
+        $(".checkbox-toggle-all").click(function () {
+            $("input:checkbox.checkbox-all").prop('checked', $(this).prop("checked"));
+        });
+
+        $("#saveBtn").on("click", function(){
+            var arrayInputs = ""
+            $("input:checked:not(.checkbox-toggle)").each(function(){
+                if(arrayInputs.length > 0){
+                    arrayInputs = arrayInputs + ";" + $(this).val()
+                }else{
+                    arrayInputs = $(this).val()
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/API/PostEmail/" + arrayInputs,
+                success: function (response) {
+                    if (response.length > 0) {
+                    sessionStorage.setItem("OutputMessage", response);
+                    location.reload()
+                    }
+                    
+                },
+                failure: function (response) {
+                    alert(response.d);
+                }
+            });
+        });
+
+        var valueOutput = $("#OutputMessage").val();
+        var validaOutPut = $("#ValidaOutPut").val();
+        
+        if(valueOutput != ""){
+            if(validaOutPut == "SUCCESS"){
+                iconOutput = "success"
+            }else{
+                iconOutput = "error"
+            }   
+
+            var Toast = Swal.mixin({
+                customClass : {
+                  title: 'swal2-title-content'
+                },
+                toast: true,
+                position: 'left-bottom',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            Toast.fire({
+                icon: iconOutput,
+                title: valueOutput
+            })
+
+            $(".swal2-title-content").css("color","#595959");
+        }
+    });
+</script>
+}

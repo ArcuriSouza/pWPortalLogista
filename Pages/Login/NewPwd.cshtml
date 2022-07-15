@@ -1,0 +1,56 @@
+﻿@page
+@model pWPortalLogista.Pages.Login.NewPwdModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Login";
+    string label_Login = "Login";
+    string label_Pwd = "Senha";
+}
+
+<!-- /.login-logo -->
+<div class="card login-box">
+    <div class="card-body login-card-body">
+    
+        <p class="login-box-msg">Alteração de Senha</p>        
+
+        @if (!ModelState.IsValid)
+        {
+            <div class="col-md-10">
+                <small><div asp-validation-summary="All" class="text-danger"></div></small>
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+
+            <div class="row input-group ml-2">
+                <span class="users-list-date">De 8 a 15 letras, com maiúsculas, minúsculas e números.</span>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="NewPassword" type="password" class="form-control" placeholder="Nova Senha" autocomplete="new-password" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input asp-for="NewPasswordConfirm" type="password" class="form-control" placeholder="Confirme a Senha" autocomplete="new-password" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                </div>
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block">Alterar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- /.login-card-body -->
+</div>

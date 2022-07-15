@@ -1,0 +1,28 @@
+﻿@page
+@model pWPortalLogista.Pages.Login.ResetInfoModel
+@using pWPortalLogista
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Login";
+    string label_Login = "Login";
+    string label_Pwd = "Senha";
+}
+
+<!-- /.login-logo -->
+<div class="card login-box">
+    <div class="card-body login-card-body">
+    
+        <p class="login-box-msg">@Model.OutputMessage</p>
+
+        <div class="row">
+            <div class="col-8">
+            </div>
+            <div class="col-4">
+                <a asp-page="/Login/Login" class="btn btn-warning btn-block">Voltar</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.login-card-body -->
+</div>
+

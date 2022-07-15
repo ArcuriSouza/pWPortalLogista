@@ -1,0 +1,148 @@
+﻿@page "{id?}"
+@model pWPortalLogista.Pages.LucCtrl.LucEditModel
+@using pWPortalLogista;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "Shared/_Layout";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <h1><i class="fas fa-clipboard mr-2 text-primary"></i>Cadastro de LUC</h1>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <form id="formPost" method="post" autocomplete="off" enctype="multipart/form-data">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+
+                        <!-- general form elements -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Dados do LUC</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="E-mail" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">Código</label>
+                                        <div class="col-4 col-sm-2 col-md-2 col-lg-2">
+                                            <input asp-for="id" type="email" class="form-control" autocomplete="new-password" autofocus readonly>                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="Data" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">LUC</label>
+                                        <div class="col-4 col-sm-2 col-md-2 col-lg-2">
+                                            <input asp-for="lucTxt" id="lucTxt" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="Data" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">Nome Fantasia</label>
+                                        <div class="col-10 col-sm-8 col-md-6 col-lg-4">
+                                            <input asp-for="noFantasia" id="noFantasia" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button id="saveButton" class="btn btn-success mr-1" type="submit">
+                                    <i class="fa fa-save mr-2"></i>Salvar
+                                </button>
+                                <a asp-page="/LucCtrl/LucPnl" class="btn btn-primary btn-sm mr-1"><i class="fas fa-arrow-circle-left mr-2"></i>Voltar</a>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!--/.col (left) -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </form>
+    </section>
+    <!-- /.content -->
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="deleteModalLabel">@ViewData["Delete.Modal.Title"]</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @ViewData["Delete.Modal.Message"]
+      </div>
+      <div class="modal-footer">
+        <form method="post" id="FormDelete">
+            <button type="submit" class="btn btn-danger" asp-page-handler="Delete"><i class="fa fa-trash"></i> Confirma</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Messages Modal -->
+@if (!ModelState.IsValid)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="messageModalLabel"><i class="fas fa-exclamation-triangle"></i> @ViewData["Error.Message"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+}                        
+<style>
+    .no-visible {
+        opacity: 0.6
+    }
+</style>
+@section Scripts
+{
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#menu_Sys_Luc").addClass("active")
+    });    
+
+    if ($('#messageModal').length > 0) {
+        //console.log('Show Modal');
+        $("#messageModal").modal();
+    }
+</script>
+}
+

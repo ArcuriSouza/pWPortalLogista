@@ -1,0 +1,427 @@
+﻿@page "{id?}"
+@model pWPortalLogista.Pages.Control.UsrEditModel
+@using pWPortalLogista;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "Shared/_Layout";
+}
+
+<div class="content-wrapper">
+    <select id="lucGetDeny" hidden>
+        @foreach (var item in Model.lstUserLucGetDeny)
+        {
+            <option value=@item.Idluc>@item.IdlucNavigation.Txluc</option>
+        }
+    </select>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <h1><i class="fas fa-lock mr-2 text-primary"></i>Controle do Lojista</h1>
+                    <small>@(Model.IsNew ? "Concessão de acesso" : "Alteração do acesso")</small>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <form id="formPost" method="post" autocomplete="off" enctype="multipart/form-data">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+
+                        <!-- general form elements -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Dados do Lojista</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="E-mail" class="col-3 col-sm-2 col-md-2 col-lg-2 col-form-label">Código</label>
+                                        <div class="col-4 col-sm-2 col-md-2 col-lg-2">
+                                            <input asp-for="id" type="email" class="form-control" autocomplete="new-password" autofocus readonly>                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="Data" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">LUC</label>
+                                        @* @if(!Model.IsNew){
+                                            <div class="col-4 col-sm-9 col-md-1 col-lg-1">
+                                                <input asp-for="lucTxt" type="text" class="form-control" readonly autofocus>
+                                            </div>
+                                            <div class="col-12 col-sm-8 col-md-7 col-lg-6">
+                                                <input asp-for="userName" type="text" class="form-control" readonly autofocus>
+                                            </div>
+                                        }else{ *@
+                                            <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                                @* <select class="form-control select2 select2-hidden-accessible multiple" style="width: 100%;">
+                                                    @foreach (var item in @Model.lstLuc)
+                                                    {
+                                                        <option value=@item.Idluc>@item.Txluc</option>
+                                                    }   
+                                                </select> *@
+                                                <select asp-for="lucForm" id="lucForm" class="form-control select2 select2-hidden-accessible multiple" style="width: 100%;" tabindex="-1" aria-hidden="true" autofocus>
+                                                    @foreach (var item in Model.lstLuc)
+                                                    {
+                                                        <option value=@item.Idluc>@item.Txluc</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        @* } *@
+                                    </div>
+                                    
+                                    <div class="form-group row col-12">
+                                        <!-- /.card-header -->
+                                        
+                                        <label for="Data" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label"></label>
+                                        <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                            <div class="card-body">                                        
+                                                <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                    <select id="lucFormView" class="duallistbox" multiple="multiple">
+                                                    </select>
+                                                    </div>
+                                                    <!-- /.form-group -->
+                                                </div>
+                                                <!-- /.col -->
+                                                </div>
+                                                <!-- /.row -->
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="nomeFantasia" class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">Nome Fantasia</label>
+                                        <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                            <input asp-for="nomeFantasia" type="text" class="form-control" placeholder="Nome" autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="userName" class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">Nome</label>
+                                        <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                            <input asp-for="userName" type="text" class="form-control" placeholder="Nome" autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="E-mail" class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">E-mail</label>
+                                        <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                            <input asp-for="userEmail" type="email" class="form-control" autocomplete="new-password" autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row input-group">
+                                    <div class="col-3 col-sm-3 col-md-2 col-lg-2">
+                                    </div>
+                                    <div class="col-9 col-sm-9 col-md-10 col-lg-10">
+                                        <span class="users-list-date ml-2">* Preencha somente se desejar alterar a senha do colaborador...</span>
+                                    </div>
+                                </div>
+                                <div class="row input-group">
+                                    <div class="col-3 col-sm-3 col-md-2 col-lg-2">
+                                    </div>
+                                    <div class="col-9 col-sm-9 col-md-10 col-lg-10">
+                                        <span class="users-list-date ml-2">De 8 a 15 letras, com maiúsculas, minúsculas e números.</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group row col-12">
+                                        <label for="userPwd" class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">Senha</label>
+                                        <div class="col-9 col-sm-8 col-md-7 col-lg-7">
+                                            <input asp-for="userPwd" type="password" class="form-control" autocomplete="new-password" autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">Tipo</label>
+                                    <div class="col-9 col-sm-9 col-md-10 col-lg-11">
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="optType" class="form-check-input" type="radio" value="0">
+                                            <label class="form-check-label">Normal</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="optType" class="form-check-input" type="radio" value="1">
+                                            <label class="form-check-label">Administrador</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-3 col-sm-3 col-md-2 col-lg-2 col-form-label">Acesso</label>
+                                    <div class="col-9 col-sm-9 col-md-10 col-lg-11">
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="optActive" class="form-check-input" type="radio" value="0">
+                                            <label class="form-check-label">Ativo</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="optActive" class="form-check-input" type="radio" value="1">
+                                            <label class="form-check-label">Inativo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!Model.IsNew)
+                                {
+                                    <div class="row">
+                                        <div class="form-group row col-12">
+                                            <label class="col-7 col-sm-5 col-md-4 col-lg-3">Data do Último Acesso:</label>
+                                        </div>
+                                        <div class="form-group row col-12">
+                                            <label class="col-5 col-sm-5 col-md-4 col-lg-3 form-check-label">@Model.lstUser.Dtlastaccess</label>
+                                        </div>
+                                    </div>
+                                }
+
+                                <strong>@ViewData["Table.Mandatory"]</strong>
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button id="saveButton" class="btn btn-success mr-1" type="submit">
+                                    <i class="fa fa-save mr-2"></i>Salvar
+                                </button>
+                                @if (!Model.IsNew)
+                                {
+                                    @* <button type="button" class="btn btn-sm btn-danger mr-1" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash mr-2"></i>Remover Acesso</button> *@
+                                }
+                                @* <button class="btn btn-primary btn-sm mr-1" onclick="window.history.go(-1); return false;"><i class="fas fa-arrow-circle-left"></i> @ViewData["Button.Back"]</button> *@
+                                <a asp-page="/Control/CtrlPnl" class="btn btn-primary btn-sm mr-1"><i class="fas fa-arrow-circle-left mr-2"></i>Voltar</a>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!--/.col (left) -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </form>
+    </section>
+    <!-- /.content -->
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="deleteModalLabel">@ViewData["Delete.Modal.Title"]</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @ViewData["Delete.Modal.Message"]
+      </div>
+      <div class="modal-footer">
+        <form method="post" id="FormDelete">
+            <button type="submit" class="btn btn-danger" asp-page-handler="Delete"><i class="fa fa-trash"></i> Confirma</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Messages Modal -->
+@if (!ModelState.IsValid)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="messageModalLabel"><i class="fas fa-exclamation-triangle"></i> @ViewData["Error.Message"]</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+}                        
+<style>
+    .no-visible {
+        opacity: 0.6
+    }
+</style>
+@section Scripts
+{
+<script type="text/javascript">
+    //Bootstrap Duallistbox
+    var dualList = $('.duallistbox').bootstrapDualListbox({
+        nonSelectedListLabel: 'Permite visualização',
+        selectedListLabel: 'Nega visualização',
+        moveOnSelect: false,
+        showFilterInputs: false,
+        infoText: false,
+        btnMoveText: '<i class="fas fa-step-forward"></i>',
+        btnMoveAllText: '<i class="fas fa-fast-forward"></i>',
+        btnRemoveText: '<i class="fas fa-step-backward"></i>',
+        btnRemoveAllText: '<i class="fas fa-fast-backward"></i>'
+    })
+
+    $(document).ready(function(){
+        LoadDataSelect()
+        $("#menu_Sys_Control").addClass("active")
+
+        $.each($("#lucGetDeny option"), function(i, e){
+            var cont = 0
+            $.each($("#bootstrap-duallistbox-nonselected-list_ option"), function(g, f){
+                if(e.text == f.text){
+                    f.selected = true
+                    $(".move").click()
+                }
+            });
+        });
+    });
+
+    $.each($("#bootstrap-duallistbox-nonselected-list_ option"), function(i, e){
+        e.selected = false
+    });
+
+    $.each($("#bootstrap-duallistbox-selected-list_ option"), function(i, e){
+        e.selected = false
+    });
+
+    $("#inputTest").attr("name", "inputTest")    
+
+    setTimeout(function(){
+        $("#bootstrap-duallistbox-nonselected-list_").prop("name", "SelectedView")
+
+        $("#bootstrap-duallistbox-selected-list_").prop("name", "NonSelectedView")       
+
+        $(".select2-selection__choice__remove").on("click", function(){
+            setTimeout(function(){
+                $("span.select2-container--open:not(.select2-container--below)").hide()
+                $("input.select2-search__field").blur()
+                $("input#id").click()
+                $(".select2-container--below").removeClass("select2-container--open")
+            }, 0.1)
+        });
+
+        $(".select2-container--below").on("click", function(){
+            $("span.select2-container--open:not(.select2-container--below)").show()
+        })
+
+        $("select2-results__option").on("click", function(){
+            $("span.select2-container--open:not(.select2-container--below)").hide()
+        })
+
+    }, 1)
+
+    if ($('#messageModal').length > 0) {
+        //console.log('Show Modal');
+        $("#messageModal").modal();
+    }
+
+    $(function () {
+        document.getElementById("group_HR").className += " menu-open";
+        document.getElementById("menu_HR_CtrlPnl").className += " active";
+    });
+
+    $(".select2-selection__choice").on("click", function(){
+        if(!$(this).hasClass("no-visible")){
+            $(this).addClass("no-visible");
+        }else{
+            $(this).removeClass("no-visible");
+        }
+        
+    });
+
+    $("#saveButton").on("click", function(){
+        $.each($("#bootstrap-duallistbox-nonselected-list_ option"), function(i, e){
+            e.selected = true
+        });
+
+        $.each($("#bootstrap-duallistbox-selected-list_ option"), function(i, e){
+            e.selected = true
+        });
+    })
+
+    $("#lucForm").prop("data-id", 5);
+
+    $("#lucForm").on("change", function(){
+        //$("#lucFormView option").remove()
+
+        LoadDataSelect()
+                
+        $(".select2-selection__choice__remove").on("click", function(){
+            setTimeout(function(){
+                $("span.select2-container--open:not(.select2-container--below)").hide()
+                $("input.select2-search__field").blur()
+                $("input#id").click()
+                $(".select2-container--below").removeClass("select2-container--open")
+            }, 0.1)
+        });
+
+        $(".select2-container--below").on("click", function(){
+            $("span.select2-container--open:not(.select2-container--below)").show()
+        })
+
+        $("select2-results__option").on("click", function(){
+            $("span.select2-container--open:not(.select2-container--below)").hide()
+        })  
+        
+    });
+
+    
+    function LoadDataSelect(){
+        var selecteds = $("#lucForm").find(":selected")
+        console.log(selecteds)
+        var selectedValues = [];
+        $.each(selecteds, function(i, e){
+            var exists = false
+
+            selectedValues.push(e.text)
+
+            $.each($("#lucFormView option"), function(g, f){
+                if(e.text == f.text){
+                    exists = true
+                }
+            });
+            console.log(exists)
+            if(!exists){
+                $('#lucFormView').append($('<option>', {
+                    value: e.value,
+                    text: e.text
+                }));    
+            }
+            
+        })
+
+        $.each($("#lucFormView option"), function(i, e){
+            if($.inArray(e.text, selectedValues) == -1){
+                $(e).remove()
+            }
+        });
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox("refresh")
+    }
+</script>
+}
+
